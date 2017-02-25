@@ -5,7 +5,24 @@
     <title>色彩选择器</title>
 </head>
 <body>
-    <canvas id="color-picker" width="600" height="400"></canvas>
+    <div class="color-picker">
+        <canvas class="color" width="600" height="400"></canvas>
+        <div class="text">
+            <div class="rgb">
+                <input class="r" type="number">
+                <input class="g" type="number">
+                <input class="b" type="number">
+            </div>
+            <div class="hsl">
+                <input class="r" type="number">
+                <input class="g" type="number">
+                <input class="b" type="number">
+            </div>
+            <div class="css">
+                <input class="r">
+            </div>
+        </div>
+    </div>
 
     <script src="./colorpicker.js"></script>
 </body>
