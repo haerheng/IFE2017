@@ -12,6 +12,7 @@ var css = t.querySelector('.css>input')
 init()
 updateText(g_color)
 function init(){
+    
     var c = document.querySelector('.color-picker .color');
     var ctx = c.getContext('2d');
     var linearGradient = ctx.createLinearGradient(0,0,0,380);    
@@ -62,8 +63,8 @@ function init(){
     drawRangeBox(ctx,[255,255,255,255])
     drawDisplayBox(ctx,[255,255,255,255])
 }
-function updateColor(rgba){
-
+function updateColor(e){
+    console.log(e)
 }
 function updateText(rgba){    
     rgb.forEach((e,i)=>{e.value = rgba[i]})
