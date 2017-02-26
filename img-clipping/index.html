@@ -5,10 +5,20 @@
     <title>clipping</title>
 </head>
 <body>
-    <canvas id="hidden-canvas" style="display: none"></canvas>
+    <div class="img-clipping">
+        <canvas id="hidden-canvas" style="display: none"></canvas>
+        <canvas class="display" width="600" height="400"></canvas>
+        <button class="zoomin">放大</button>
+        <button class="zoomout">缩小</button>
+        <button class="left">左移</button>
+        <button class="right">右移</button>
+        <button class="up">上移</button>
+        <button class="down">下移</button>
+        <button class="rotate">左旋</button>
+        <input type="file" id="file-picker">
+    </div>
     
-    <canvas class="img-clipping" width="600" height="400"></canvas>
-    <input type="file" id="file-picker">
+    
     <script src="./clipping.js"></script>
 </body>
 </html>
