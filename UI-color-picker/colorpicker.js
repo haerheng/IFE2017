@@ -11,8 +11,7 @@ var hsl = t.querySelectorAll('.hsl>input')
 var css = t.querySelector('.css>input')
 init()
 updateText(g_color)
-function init(){
-    
+function init(){    
     var c = document.querySelector('.color-picker .color');
     var ctx = c.getContext('2d');
     var linearGradient = ctx.createLinearGradient(0,0,0,380);    
@@ -25,7 +24,7 @@ function init(){
     linearGradient.addColorStop(1.0/6*6,'#FF0000')
     ctx.fillStyle = linearGradient;
     ctx.fillRect.apply(ctx,colorBandage)
-
+    
     c.addEventListener('mousemove',function(e){
         var pos = getMousePosition(e)    
         var color
@@ -63,6 +62,7 @@ function init(){
     drawRangeBox(ctx,[255,255,255,255])
     drawDisplayBox(ctx,[255,255,255,255])
 }
+
 function updateColor(e){
     console.log(e)
 }
@@ -71,6 +71,21 @@ function updateText(rgba){
     var m_hsl = rgbToHsl(rgba)
     hsl.forEach((e,i)=>{e.value = m_hsl[i].toFixed(2)})
     css.value = '#'+rgba[0].toString(16)+rgba[1].toString(16)+rgba[2].toString(16)
+}
+function drawLine(pos){
+    ctx.save()
+    ctx.beginPath()   
+    ctx.rect()
+    ctx.strokeStyle="#cccccc"
+    ctx.lineWidth=2
+    ctx.stroke()
+    ctx.fillStyle = m_linearGradient
+    ctx.fill()
+    ctx.closePath()
+    ctx.restore()    
+}
+function drawPoint(pos){
+    
 }
 function drawRangeBox(ctx,rgba){
     ctx.save()
