@@ -27,6 +27,7 @@ var filepicker = document.querySelector('#file-picker')
 filepicker.addEventListener('change',()=>{
     LoadImage(filepicker.files[0],ctx)
 })
+var old_color = [0,0,0,0]
 c.addEventListener('mousemove',(e)=>{
     if(!g_loaded){
         return
@@ -39,6 +40,9 @@ c.addEventListener('mousemove',(e)=>{
     var temp = g_hidden_canvas.getContext('2d')
     var color = temp.getImageData(src_pos.x,src_pos.y,1,1)
     display(g_hidden_canvas,ctx,mapinfo)
+    
+    console.log(color_distance(old_color,color.data))
+    old_color = color.data
     // var xxx = c.getContext('2d')
     // xxx.fillStyle = 'rgba('+color.data.join(',')+')'
     // xxx.clearRect(oldpos.x,oldpos.y,20,20)
@@ -47,7 +51,7 @@ c.addEventListener('mousemove',(e)=>{
     //     x:pos.x,
     //     y:pos.y
     // }
-    // console.log(color.data)
+    // console.log(color)
     // console.log(src_pos)
     // console.log(mapinfo.translate)
 
@@ -65,7 +69,6 @@ function display(src_c,dst_ctx,mapinfo){
     dst_ctx.restore()
 }
 function displayChange(event){
-    // console.log(event.target.className)
     switch(event.target.className){
         case 'zoomin':
             mapinfo.scale.x = mapinfo.scale.y *= 1.1
@@ -128,4 +131,42 @@ function getMousePosition(e){
         y = e.offsetY
     }
     return {x:x,y:y}
+}
+function color_distance(rgb0,rgb1){
+    return parseInt( Math.sqrt( 3*Math.pow(rgb0[0]-rgb1[0],2) +
+            4*Math.pow(rgb0[1]-rgb1[1],2) +
+            2*Math.pow(rgb0[2]-rgb1[2],2)))
+}
+function color_distance11(rgb0,rgb1){
+    var sum = 0, sum0 = 0, sum1 = 0
+    var i = 0
+    for(i = 0; i < 3; i++)
+    {
+        var e = rgb0[i]
+        // console.log(e+' '+rgb1[i])
+        if(i>2)
+            return
+        sum += (e * rgb1[i])
+        sum0 += (e*e)
+        sum1 += (rgb1[i]*rgb1[i])
+    }
+    // console.log([sum,sum0,sum1].join(' '))
+    var theta = Math.acos(sum/(sum0*sum1==0?1:sum0*sum1))*510/Math.PI
+    // console.log(theta+' theta')
+    var max = Math.max(vector(rgb0)[3],vector(rgb1)[3])
+    var min = Math.min(vector(rgb0)[3],vector(rgb1)[3])
+    if(max == min){
+        max = 1
+        min = 1
+    }
+    if(min == 0)
+        min = 1
+    var top = Math.abs(max/min) - 1
+    // console.log(top+" top")
+    var D = Math.pow(2,top) * theta
+    return D
+    function vector(rgb){
+        var u = (rgb[0]+rgb[1]+rgb[2])/3
+        return [rgb[0] - u, rgb[1] - u, rgb[2] - u, u]
+    }
 }
