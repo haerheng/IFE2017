@@ -1,4 +1,4 @@
-
+window.count = 3
 var g_hidden_canvas
 var g_loaded = false
 var mapinfo ={
@@ -14,12 +14,13 @@ var mapinfo ={
         y:0
     }
 }
-var oldpos ={
-    x:0,
-    y:0
-}
-document.querySelectorAll('.img-clipping>button').forEach((e)=>{
+
+document.querySelectorAll('.img-clipping button').forEach((e)=>{
     e.addEventListener('click',displayChange)
+})
+document.querySelector('#precision').value = window.count
+document.querySelector('#precision').addEventListener('change',(e)=>{
+    window.count = e.target.value
 })
 var c = document.querySelector('.img-clipping .display')
 var ctx = c.getContext('2d')
@@ -37,12 +38,14 @@ c.addEventListener('mousemove',(e)=>{
         x:Math.ceil((pos.x)/mapinfo.scale.x - mapinfo.translate.x),
         y:Math.ceil((pos.y)/mapinfo.scale.y - mapinfo.translate.y)
     }
-    var temp = g_hidden_canvas.getContext('2d')
-    var color = temp.getImageData(src_pos.x,src_pos.y,1,1)
-    display(g_hidden_canvas,ctx,mapinfo)
+
     
-    console.log(color_distance(old_color,color.data))
-    old_color = color.data
+    // var temp = g_hidden_canvas.getContext('2d')
+    // var color = temp.getImageData(src_pos.x,src_pos.y,1,1)
+    // display(g_hidden_canvas,ctx,mapinfo)
+    
+    // console.log(color_distance(old_color,color.data))
+    // old_color = color.data
     // var xxx = c.getContext('2d')
     // xxx.fillStyle = 'rgba('+color.data.join(',')+')'
     // xxx.clearRect(oldpos.x,oldpos.y,20,20)
@@ -57,7 +60,86 @@ c.addEventListener('mousemove',(e)=>{
 
 })
 
+c.addEventListener('click',(e)=>{
+    if(!g_loaded){
+        return
+    }
+    var pos = getMousePosition(e)
+    var src_pos = {
+        x:Math.ceil((pos.x)/mapinfo.scale.x - mapinfo.translate.x),
+        y:Math.ceil((pos.y)/mapinfo.scale.y - mapinfo.translate.y)
+    }
+    if(src_pos.x > g_hidden_canvas.width || src_pos.x < 0 || src_pos.y > g_hidden_canvas.height || src_pos.y < 0)
+        return
+    alert('RGBA: ('+clip(src_pos).join(',')+')')
+})
+function clip(pos){
+    var imgdata = g_hidden_canvas.getContext('2d').getImageData(0,0,g_hidden_canvas.width,g_hidden_canvas.height)
+    var width = imgdata.width, height = imgdata.height, data = imgdata.data
+    var color = _color(pos.x,pos.y)
+    var g_arr0 = new Array(width * height), g_arr1 = new Array(width * height) 
+    var newarr
 
+    newarr = recursion([pos.x,pos.y])  
+    g_arr1.forEach(
+        (e,i)=>{
+            imgdata.data[i] = 255
+            imgdata.data[i+1] = 255
+            imgdata.data[i+2] = 255
+            imgdata.data[i+4] = 255
+            // console.log(i)
+        }
+    )
+    
+    g_hidden_canvas.getContext('2d').putImageData(imgdata,0,0)
+    display(g_hidden_canvas,ctx,mapinfo)
+    // console.log(g_arr1)  
+    return color
+    function recursion(point){
+        var new_arr        
+        var near = _nearby(point[0], point[1])
+        new_arr = []
+        near.forEach((e,i)=>{
+            var D = color_distance(color, _color(e[0],e[1]))
+            var index = _(e[0],e[1])
+            if(g_arr0[index] || g_arr1[index]){
+                return
+            }
+            if(D > window.count){
+                g_arr0[index] = 1
+            }else{
+                g_arr1[index] = 1
+                new_arr.push(e)
+            }
+        })
+        new_arr.forEach((e)=>{
+            recursion(e)
+        })
+
+    }
+    function _nearby(x, y){
+        var arr = [[x-1,y-1],[x-1,y],[x-1,y+1],[x,y-1],[x,y+1],[x+1,y-1],[x+1,y],[x+1,y+1]]
+        var result = []
+        arr.forEach((e,i)=>{
+            if(e[0]>width || e[0]<0 || e[1]>height || e[1]<0)
+                return            
+            result.push([e[0],e[1]])
+        })
+        return result
+    }
+    function _color(x,y){
+        if(x>width || y>height)
+            return NaN
+        var i = (y*width+x)*4
+        return [data[i],data[i+1],data[i+2],data[i+3]]
+    }
+    function _(x,y){
+        if(x>width || y>height)
+            return NaN
+        var i = (y*width+x)*4
+        return i//[data[i],data[i+1],data[i+2],data[i+3]]
+    }
+}
 function display(src_c,dst_ctx,mapinfo){
     // console.log(mapinfo)
     dst_ctx.save()
