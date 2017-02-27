@@ -51,7 +51,8 @@
 }
 .blur-btn:hover .innerborder::after{
     transition: 0.5s linear;
-    width: 70%;
+    width: 72%;
+    
 }
 .blur-btn:hover .innerborder::before{
     transition: 0.5s linear;
