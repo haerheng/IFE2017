@@ -2,22 +2,77 @@
     width: 200px;
     height: 150px;
     position: relative;
+    cursor: pointer;
 }
-.back-layer{
+.blur-btn .back-layer{
     background: url("./background.jpeg");
     position: absolute;
     width: 100%;
     height: 100%;
 }
-.back-layer:hover{
+.blur-btn:hover .blur{
     filter: blur(3px);
 }
-.up-layer{
+.blur-btn .up-layer{
     position: absolute;
     top: 0; right: 0; bottom: 0; left: 0;
     width: 200px;
     height: 150px;
     text-align: center;
-    line-height: 150px;
     opacity: 100;
+}
+.blur-btn .innerborder::before{
+    content: "";
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 70%;
+    height: 0%;
+    /*background-color: red;*/
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+    margin: auto;
+}
+.blur-btn .innerborder::after{
+    content: "";
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 0%;
+    height: 60%;
+    /*background-color: red;*/
+    border-top: 2px solid white;
+    border-bottom: 2px solid white;
+    margin: auto;
+}
+.blur-btn:hover .innerborder::after{
+    transition: 0.5s linear;
+    width: 70%;
+}
+.blur-btn:hover .innerborder::before{
+    transition: 0.5s linear;
+    height: 60%
+}
+.blur-btn .text{
+    top: 50%;
+    position: absolute;
+    color: transparent;
+    transform: translate(-50%,0);
+}
+.blur-btn:hover .text{
+    transition: transform 0.1s linear;    
+    transform: translate(-50%,-50%);
+    background-image: -webkit-linear-gradient(left, blue, red 25%, blue 50%, red 75%, blue 100%);
+    background-size: 200%, 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: wave .8s linear infinite;
+}
+@keyframes wave {
+    0% {background-position: 0% 0%;}
+    100% {background-position: -100% 0%;}
 }
