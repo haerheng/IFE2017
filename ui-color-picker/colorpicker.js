@@ -105,6 +105,7 @@ function init(){
         }else if(inRange(rangeBox,pos,2)){
             g_color = color
             g_range_complete = true
+            drawDisplayBox(ctx,color)
             console.log(color)
         }
     })
@@ -148,7 +149,7 @@ function drawRangeBox(ctx,rgba){
     ctx.stroke()
     ctx.fillStyle = m_linearGradient0
     ctx.fill()
-    var m_linearGradient1 = ctx.createLinearGradient(0,0,360,0)
+    var m_linearGradient1 = ctx.createLinearGradient(30,30,360,30)
     m_linearGradient1.addColorStop(0,'rgba(0,0,0,0)')
     m_linearGradient1.addColorStop(1,'rgba(0,0,0,1)')
     ctx.fillStyle = m_linearGradient1
