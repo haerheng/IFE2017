@@ -36,6 +36,7 @@ function init(){
                 return
             }
             drawRangeBox(ctx,color)
+            drawLine(ctx,pos)
         }else if(inRange(rangeBox,pos,2)){
             if(g_range_complete)
                 return
@@ -53,6 +54,7 @@ function init(){
             g_color = color
             g_bandage_complete = true
             drawRangeBox(ctx,color)
+            drawLine(ctx,pos)
         }else if(inRange(rangeBox,pos,2)){
             g_color = color
             g_range_complete = true
@@ -72,15 +74,16 @@ function updateText(rgba){
     hsl.forEach((e,i)=>{e.value = m_hsl[i].toFixed(2)})
     css.value = '#'+rgba[0].toString(16)+rgba[1].toString(16)+rgba[2].toString(16)
 }
-function drawLine(pos){
+function drawLine(ctx,pos){
     ctx.save()
-    ctx.beginPath()   
-    ctx.rect()
-    ctx.strokeStyle="#cccccc"
-    ctx.lineWidth=2
+    ctx.beginPath() 
+    ctx.clearRect(446,0,10,400)  
+    ctx.clearRect(409,0,10,400) 
+    ctx.rect(447,pos.y-2,8,1)
+    ctx.rect(410,pos.y-2,8,1)
+    ctx.strokeStyle="#000"
+    ctx.lineWidth=1
     ctx.stroke()
-    ctx.fillStyle = m_linearGradient
-    ctx.fill()
     ctx.closePath()
     ctx.restore()    
 }
@@ -90,15 +93,19 @@ function drawPoint(pos){
 function drawRangeBox(ctx,rgba){
     ctx.save()
     ctx.beginPath()
-    var m_linearGradient = ctx.createLinearGradient(30,30,360,360);    
-    m_linearGradient.addColorStop(0,'#FFFFFF')
-    m_linearGradient.addColorStop(0.5,'rgba('+rgba.join(',')+')')
-    m_linearGradient.addColorStop(1,'#000000')    
+    var m_linearGradient0 = ctx.createLinearGradient(30,30,30,360);    
+    m_linearGradient0.addColorStop(0,'#FFFFFF')
+    m_linearGradient0.addColorStop(1,'rgba('+rgba.join(',')+')')
     ctx.rect.apply(ctx,rangeBox)
     ctx.strokeStyle="#cccccc"
     ctx.lineWidth=2
     ctx.stroke()
-    ctx.fillStyle = m_linearGradient
+    ctx.fillStyle = m_linearGradient0
+    ctx.fill()
+    var m_linearGradient1 = ctx.createLinearGradient(0,0,360,0)
+    m_linearGradient1.addColorStop(0,'rgba(0,0,0,0)')
+    m_linearGradient1.addColorStop(1,'rgba(0,0,0,1)')
+    ctx.fillStyle = m_linearGradient1
     ctx.fill()
     ctx.closePath()
     ctx.restore()    
@@ -116,7 +123,6 @@ function drawDisplayBox(ctx,rgba){
     ctx.restore()    
 }
 function inRange(range,pos,stroke){
-    // console.log(range)
     if(pos.x>=range[0] + range[2] - stroke*2 || pos.x < range[0]+stroke || pos.y > range[1] + range[3] - stroke*2 || pos.y < range[1] + stroke)
         return false
     return true
