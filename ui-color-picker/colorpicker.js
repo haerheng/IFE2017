@@ -2,13 +2,55 @@ var displayBox = [500,10,50,50]
 var colorBandage = [420,0,25,400]
 var rangeBox = [0,0,400,400]
 var g_color = [255,255,255,255]
+var g_hsl = [0,0,0]
 var range = [255,255,255,255]
 var g_bandage_complete = false
 var g_range_complete = false
+//文本控件初始化
 var t = document.querySelector('.color-picker .text')
 var rgb = t.querySelectorAll('.rgb>input')
 var hsl = t.querySelectorAll('.hsl>input')
 var css = t.querySelector('.css>input')
+t.querySelectorAll('input').forEach((e)=>{
+    e.addEventListener('change',(e)=>{
+        console.log(e.target.className)
+        var value = e.target.value
+        switch(e.target.className){
+            case 'r':
+                g_color[0] = value
+                // updateText(g_color)
+                break
+            case 'g':
+                g_color[1] = value
+                // updateText(g_color)
+                break
+            case 'b':
+                g_color[2] = value
+                // updateText(g_color)
+                break
+            case 'h':
+                g_hsl[0] = value
+                g_color = hslToRgb(g_hsl)
+                
+                break
+            case 's':
+                g_hsl[1] = value
+                g_color = hslToRgb(g_hsl)
+                break
+            case 'l':
+                g_hsl[2] = value
+                g_color = hslToRgb(g_hsl)
+                break
+            case 'c':
+                //g_color = rgb
+                break
+            default:
+                break
+        }
+        updateText(g_color)
+        updateColor(g_color)
+    })
+})
 init()
 updateText(g_color)
 function init(){    
@@ -24,7 +66,12 @@ function init(){
     linearGradient.addColorStop(1.0/6*6,'#FF0000')
     ctx.fillStyle = linearGradient;
     ctx.fillRect.apply(ctx,colorBandage)
-    
+    updateColor = (()=>{
+        var ctx00 = ctx
+        return function(rgba){
+            drawDisplayBox(ctx00,rgba)
+        }
+    })()
     c.addEventListener('mousemove',function(e){
         var pos = getMousePosition(e)    
         var color
@@ -61,17 +108,16 @@ function init(){
             console.log(color)
         }
     })
+
     drawRangeBox(ctx,[255,255,255,255])
     drawDisplayBox(ctx,[255,255,255,255])
 }
 
-function updateColor(e){
-    console.log(e)
-}
+var updateColor
 function updateText(rgba){    
     rgb.forEach((e,i)=>{e.value = rgba[i]})
-    var m_hsl = rgbToHsl(rgba)
-    hsl.forEach((e,i)=>{e.value = m_hsl[i].toFixed(2)})
+    g_hsl = rgbToHsl(rgba)
+    hsl.forEach((e,i)=>{e.value = g_hsl[i].toFixed(2)})
     css.value = '#'+rgba[0].toString(16)+rgba[1].toString(16)+rgba[2].toString(16)
 }
 function drawLine(ctx,pos){
@@ -181,4 +227,7 @@ function hslToRgb(hsl){
     }
 
     return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+}
+function hexToRgb(hex){
+    
 }
