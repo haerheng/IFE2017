@@ -214,12 +214,12 @@ function getMousePosition(e){
     }
     return {x:x,y:y}
 }
-function color_distance(rgb0,rgb1){
+function color_distance11(rgb0,rgb1){
     return parseInt( Math.sqrt( 3*Math.pow(rgb0[0]-rgb1[0],2) +
             4*Math.pow(rgb0[1]-rgb1[1],2) +
             2*Math.pow(rgb0[2]-rgb1[2],2)))
 }
-function color_distance11(rgb0,rgb1){
+function color_distance(rgb0,rgb1){
     var sum = 0, sum0 = 0, sum1 = 0
     var i = 0
     for(i = 0; i < 3; i++)
