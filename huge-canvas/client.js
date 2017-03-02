@@ -6,9 +6,15 @@ var image = new Image()
 image.src = './img/background.jpeg'
 image.onload = function(){
     console.log('onload')
+    hidden_c.width = image.width * 3
+    hidden_c.height = image.height * 3
     hidden_ctx.drawImage(image,0,0)
+    hidden_ctx.drawImage(image,image.width,0)
+    hidden_ctx.drawImage(image,image.width*2,0)
+    hidden_ctx.drawImage(image,0,image.height)
+    hidden_ctx.drawImage(image,image.width,image.height)
+    hidden_ctx.drawImage(image,image.width*2,image.height)
     display_ctx.drawImage(image,0,0,image.width,image.height)
-    // display_ctx.fillRect(0,0,100,100)
 }
 
 
