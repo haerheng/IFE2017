@@ -106,8 +106,11 @@ function init(){
             g_color = color
             g_range_complete = true
             drawDisplayBox(ctx,color)
+            drawPoint(ctx,pos)
             console.log(color)
         }
+        updateText(color)
+
     })
 
     drawRangeBox(ctx,[255,255,255,255])
@@ -134,8 +137,15 @@ function drawLine(ctx,pos){
     ctx.closePath()
     ctx.restore()    
 }
-function drawPoint(pos){
-    
+function drawPoint(ctx,pos){
+    ctx.save()
+    ctx.beginPath()
+    ctx.arc(pos.x,pos.y,10,0,2*Math.PI,0)
+    ctx.stroke()
+    // ctx.strokeStyle = 'rgba(0,0,0,0)'
+    // ctx.stroke()
+    ctx.closePath()
+    ctx.restore()
 }
 function drawRangeBox(ctx,rgba){
     ctx.save()
