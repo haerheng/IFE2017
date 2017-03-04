@@ -1,4 +1,4 @@
-window.count = 3
+window.count = 200
 var g_hidden_canvas
 var g_loaded = false
 var mapinfo ={
@@ -59,6 +59,23 @@ c.addEventListener('mousemove',(e)=>{
     // console.log(mapinfo.translate)
 
 })
+/**
+ * load Test file.
+ */
+var testImg = new Image();
+testImg.src = './img/test.jpg'
+testImg.onload = function(){
+        var _c = document.querySelector('#hidden-canvas')
+        _c.height = testImg.height
+        _c.width = testImg.width
+        g_hidden_canvas = _c
+        var _ctx = _c.getContext('2d')
+        _ctx.drawImage(testImg,0,0,testImg.width,testImg.height)        
+        mapinfo.scale.x = mapinfo.scale.y = 400.0/Math.max(testImg.width,testImg.height)
+        ctx.clearRect(0,0,400,400)
+        display(_c,ctx,mapinfo) 
+        g_loaded = true       
+    }
 
 c.addEventListener('click',(e)=>{
     if(!g_loaded){
@@ -71,7 +88,7 @@ c.addEventListener('click',(e)=>{
     }
     if(src_pos.x > g_hidden_canvas.width || src_pos.x < 0 || src_pos.y > g_hidden_canvas.height || src_pos.y < 0)
         return
-    alert('RGBA: ('+clip(src_pos).join(',')+')')
+    console.log('RGBA: ('+clip(src_pos).join(',')+')')
 })
 function clip(pos){
     var imgdata = g_hidden_canvas.getContext('2d').getImageData(0,0,g_hidden_canvas.width,g_hidden_canvas.height)
@@ -80,7 +97,13 @@ function clip(pos){
     var g_arr0 = new Array(width * height), g_arr1 = new Array(width * height) 
     var newarr
 
-    newarr = recursion([pos.x,pos.y])  
+    newarr = recursion([pos.x,pos.y]) 
+    // newarr.forEach((e)=>{
+    //     newarr = newarr.concat(recursion(e))
+    // })
+    for(var i = 0; newarr[i];i++){
+        newarr = newarr.concat(recursion(newarr[i]))
+    }
     g_arr1.forEach(
         (e,i)=>{
             imgdata.data[i] = 255
@@ -112,6 +135,7 @@ function clip(pos){
                 new_arr.push(e)
             }
         })
+        return new_arr;
         new_arr.forEach((e)=>{
             recursion(e)
         })
@@ -170,7 +194,11 @@ function displayChange(event){
         case 'down':
             mapinfo.translate.y += 10
             break
-        case 'rotate':
+        case 'save':
+            var savedImg = g_hidden_canvas.toDataURL('png')
+            savedImg.replace(_fixType('png'),'image/octet-stream')
+            var filename = 'save_' + (new Date()).getTime() + '.' + 'png';
+            saveFile(savedImg,filename);
             break
         default:
             break
@@ -178,6 +206,27 @@ function displayChange(event){
     ctx.clearRect(0,0,800,800)
     display(g_hidden_canvas,ctx,mapinfo)
 }
+/**
+ * 引用自：
+ * https://www.baidufe.com/item/65c055482d26ec59e27e.html
+ */
+var _fixType = function(type) {
+    type = type.toLowerCase().replace(/jpg/i, 'jpeg');
+    var r = type.match(/png|jpeg|bmp|gif/)[0];
+    return 'image/' + r;
+};
+
+var saveFile = function(data, filename){
+    var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+    save_link.href = data;
+    save_link.download = filename;
+   
+    var event = document.createEvent('MouseEvents');
+    event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+    save_link.dispatchEvent(event);
+};
+   
+
 /*
 LoadImage(img_file,ctx)
 将input（file）中读取到的文件加载至canvas
@@ -214,12 +263,12 @@ function getMousePosition(e){
     }
     return {x:x,y:y}
 }
-function color_distance11(rgb0,rgb1){
+function color_distance(rgb0,rgb1){
     return parseInt( Math.sqrt( 3*Math.pow(rgb0[0]-rgb1[0],2) +
             4*Math.pow(rgb0[1]-rgb1[1],2) +
             2*Math.pow(rgb0[2]-rgb1[2],2)))
 }
-function color_distance(rgb0,rgb1){
+function color_distance11(rgb0,rgb1){
     var sum = 0, sum0 = 0, sum1 = 0
     var i = 0
     for(i = 0; i < 3; i++)
