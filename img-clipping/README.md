@@ -1,5 +1,5 @@
 # 自动扣图
-[IFE2017](http://git.roughwin.com/IFE2017/)个人作品的一部分
+[IFE2017](https://roughwin.github.io/IFE2017/)个人作品的一部分
 
 技术点：canvas、色差计算
 
@@ -16,4 +16,4 @@
 * 确定了选中范围后，把这个区域设成纯白色，即可视为完成了这个题目
 * 你可以使用参考文件中的算法，也可以自己研究算法
 
-预览链接：[http://git.roughwin.com/IFE2017/img-clipping/index.html](http://git.roughwin.com/IFE2017/img-clipping/index.html)
+预览链接：[https://roughwin.github.io/IFE2017/img-clipping/index.html](https://roughwin.github.io/IFE2017/img-clipping/index.html)
