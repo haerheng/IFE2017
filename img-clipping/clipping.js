@@ -101,8 +101,12 @@ function clip(pos){
     // newarr.forEach((e)=>{
     //     newarr = newarr.concat(recursion(e))
     // })
-    for(var i = 0; newarr[i];i++){
+    for(var i = 0, p = 0; newarr[i];i++){
         newarr = newarr.concat(recursion(newarr[i]))
+        if(i/newarr.length - p > 0.1){
+            p = i/newarr.length
+            console.log(p)
+        }
     }
     g_arr1.forEach(
         (e,i)=>{
@@ -136,9 +140,7 @@ function clip(pos){
             }
         })
         return new_arr;
-        new_arr.forEach((e)=>{
-            recursion(e)
-        })
+        
 
     }
     function _nearby(x, y){
