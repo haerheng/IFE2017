@@ -1,3 +1,28 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0; }
+
 a {
   display: block;
   margin: 0.5rem; }
+
+h1 {
+  text-align: center; }
+
+h2 {
+  padding: 0;
+  margin: 0;
+  font-size: 1rem; }
+
+.container {
+  width: 90vh;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: nowrap; }
+
+.program {
+  width: calc(90vh / 4); }
+  .program h2, .program a, .program img {
+    text-align: center; }
