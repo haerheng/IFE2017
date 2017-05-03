@@ -15,6 +15,7 @@ gulp.task('sass', function() {
         .pipe(gulp.dest(''))
 })
 gulp.task("ser", function () {
+    gulp.watch("./*+(html|js|css)",['reload'])
     gulp.watch("./!(node_modules)/**/*+(html|js|css)",['reload'])
     gulp.watch("./!(node_modules)/**/*.scss",['sass'])
     browerSync.init({
