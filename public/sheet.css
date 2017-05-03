@@ -4,25 +4,39 @@ html, body {
   margin: 0;
   padding: 0; }
 
-a {
-  display: block;
-  margin: 0.5rem; }
-
 h1 {
   text-align: center; }
 
-h2 {
-  padding: 0;
-  margin: 0;
-  font-size: 1rem; }
-
 .container {
-  width: 90vh;
-  margin: 0 auto;
-  display: flex;
-  flex-wrap: nowrap; }
+  width: 80vw;
+  margin: 0 auto; }
 
 .program {
-  width: calc(90vh / 4); }
+  box-sizing: border-box;
+  display: inline-block;
+  width: 12.5rem;
+  overflow: hidden;
+  margin: 2rem auto;
+  box-shadow: 5px 5px 10px #888888; }
+  .program:hover {
+    box-shadow: 7px 7px 15px #888888; }
   .program h2, .program a, .program img {
-    text-align: center; }
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    text-decoration: none; }
+  .program .preview {
+    display: block;
+    position: relative; }
+  .program .code {
+    float: right;
+    margin-right: 1rem; }
+  .program h2 {
+    font-size: 1rem;
+    line-height: 2rem;
+    vertical-align: middle;
+    overflow: hidden; }
+  .program img {
+    height: 13rem;
+    width: 13rem;
+    margin: 0 auto; }
