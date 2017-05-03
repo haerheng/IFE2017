@@ -21,6 +21,7 @@ html {
   width: 12.5rem;
   overflow: hidden;
   margin: 2rem auto;
+  transition: box-shadow .3s;
   box-shadow: 5px 5px 10px #888888; }
   .program:hover {
     box-shadow: 7px 7px 15px #888888; }
