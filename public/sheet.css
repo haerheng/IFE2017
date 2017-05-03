@@ -7,9 +7,13 @@ html, body {
 h1 {
   text-align: center; }
 
+html {
+  font: 16px; }
+
 .container {
   width: 80vw;
-  margin: 0 auto; }
+  margin: 0 auto;
+  text-align: center; }
 
 .program {
   box-sizing: border-box;
@@ -40,3 +44,8 @@ h1 {
     height: 13rem;
     width: 13rem;
     margin: 0 auto; }
+
+@media screen and (max-width: 510px) {
+  .program {
+    display: block;
+    margin: 0 auto; } }
