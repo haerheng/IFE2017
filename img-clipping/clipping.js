@@ -90,82 +90,98 @@ c.addEventListener('click',(e)=>{
         return
     console.log('RGBA: ('+clip(src_pos).join(',')+')')
 })
-function clip(pos){
+function clip(pos) {
     var imgdata = g_hidden_canvas.getContext('2d').getImageData(0,0,g_hidden_canvas.width,g_hidden_canvas.height)
-    var width = imgdata.width, height = imgdata.height, data = imgdata.data
-    var color = _color(pos.x,pos.y)
-    var g_arr0 = new Array(width * height), g_arr1 = new Array(width * height) 
-    var newarr
-
-    newarr = recursion([pos.x,pos.y]) 
-    // newarr.forEach((e)=>{
-    //     newarr = newarr.concat(recursion(e))
-    // })
-    for(var i = 0, p = 0; newarr[i];i++){
-        newarr = newarr.concat(recursion(newarr[i]))
-        if(i/newarr.length - p > 0.1){
-            p = i/newarr.length
-            console.log(p)
-        }
+    if(window.Worker){
+        var myWroker = new Worker('worker.js')
     }
-    g_arr1.forEach(
-        (e,i)=>{
-            imgdata.data[i] = 255
-            imgdata.data[i+1] = 255
-            imgdata.data[i+2] = 255
-            imgdata.data[i+4] = 255
-            // console.log(i)
-        }
-    )
+    else{
+        alert('浏览器不支持Web Worker')
+        return [1,1,1]
+    }
+    myWroker.postMessage([imgdata, pos, window.count])
+    myWroker.onmessage = function(e) {
+        g_hidden_canvas.getContext('2d').putImageData(e.data,0,0)
+        display(g_hidden_canvas,ctx,mapinfo)
+    }
+    return [0,0,0]
+}
+// function clip(pos){
+//     var imgdata = g_hidden_canvas.getContext('2d').getImageData(0,0,g_hidden_canvas.width,g_hidden_canvas.height)
+//     var width = imgdata.width, height = imgdata.height, data = imgdata.data
+//     var color = _color(pos.x,pos.y)
+//     var g_arr0 = new Array(width * height), g_arr1 = new Array(width * height) 
+//     var newarr
+
+//     newarr = recursion([pos.x,pos.y]) 
+//     // newarr.forEach((e)=>{
+//     //     newarr = newarr.concat(recursion(e))
+//     // })
+//     for(var i = 0, p = 0; newarr[i];i++){
+//         newarr = newarr.concat(recursion(newarr[i]))
+//         if(i/newarr.length - p > 0.1){
+//             p = i/newarr.length
+//             console.log(p)
+//         }
+//     }
+//     g_arr1.forEach(
+//         (e,i)=>{
+//             imgdata.data[i] = 255
+//             imgdata.data[i+1] = 255
+//             imgdata.data[i+2] = 255
+//             imgdata.data[i+4] = 255
+//             // console.log(i)
+//         }
+//     )
     
-    g_hidden_canvas.getContext('2d').putImageData(imgdata,0,0)
-    display(g_hidden_canvas,ctx,mapinfo)
-    // console.log(g_arr1)  
-    return color
-    function recursion(point){
-        var new_arr        
-        var near = _nearby(point[0], point[1])
-        new_arr = []
-        near.forEach((e,i)=>{
-            var D = color_distance(color, _color(e[0],e[1]))
-            var index = _(e[0],e[1])
-            if(g_arr0[index] || g_arr1[index]){
-                return
-            }
-            if(D > window.count){
-                g_arr0[index] = 1
-            }else{
-                g_arr1[index] = 1
-                new_arr.push(e)
-            }
-        })
-        return new_arr;
+//     g_hidden_canvas.getContext('2d').putImageData(imgdata,0,0)
+//     display(g_hidden_canvas,ctx,mapinfo)
+//     // console.log(g_arr1)  
+//     return color
+//     function recursion(point){
+//         var new_arr        
+//         var near = _nearby(point[0], point[1])
+//         new_arr = []
+//         near.forEach((e,i)=>{
+//             var D = color_distance(color, _color(e[0],e[1]))
+//             var index = _(e[0],e[1])
+//             if(g_arr0[index] || g_arr1[index]){
+//                 return
+//             }
+//             if(D > window.count){
+//                 g_arr0[index] = 1
+//             }else{
+//                 g_arr1[index] = 1
+//                 new_arr.push(e)
+//             }
+//         })
+//         return new_arr;
         
 
-    }
-    function _nearby(x, y){
-        var arr = [[x-1,y-1],[x-1,y],[x-1,y+1],[x,y-1],[x,y+1],[x+1,y-1],[x+1,y],[x+1,y+1]]
-        var result = []
-        arr.forEach((e,i)=>{
-            if(e[0]>width || e[0]<0 || e[1]>height || e[1]<0)
-                return            
-            result.push([e[0],e[1]])
-        })
-        return result
-    }
-    function _color(x,y){
-        if(x>width || y>height)
-            return NaN
-        var i = (y*width+x)*4
-        return [data[i],data[i+1],data[i+2],data[i+3]]
-    }
-    function _(x,y){
-        if(x>width || y>height)
-            return NaN
-        var i = (y*width+x)*4
-        return i//[data[i],data[i+1],data[i+2],data[i+3]]
-    }
-}
+//     }
+//     function _nearby(x, y){
+//         var arr = [[x-1,y-1],[x-1,y],[x-1,y+1],[x,y-1],[x,y+1],[x+1,y-1],[x+1,y],[x+1,y+1]]
+//         var result = []
+//         arr.forEach((e,i)=>{
+//             if(e[0]>width || e[0]<0 || e[1]>height || e[1]<0)
+//                 return            
+//             result.push([e[0],e[1]])
+//         })
+//         return result
+//     }
+//     function _color(x,y){
+//         if(x>width || y>height)
+//             return NaN
+//         var i = (y*width+x)*4
+//         return [data[i],data[i+1],data[i+2],data[i+3]]
+//     }
+//     function _(x,y){
+//         if(x>width || y>height)
+//             return NaN
+//         var i = (y*width+x)*4
+//         return i//[data[i],data[i+1],data[i+2],data[i+3]]
+//     }
+// }
 function display(src_c,dst_ctx,mapinfo){
     // console.log(mapinfo)
     dst_ctx.save()
