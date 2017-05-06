@@ -26,6 +26,7 @@ onmessage = function(e) {
         }
     )
     postMessage(imgdata)
+    close()
     // g_hidden_canvas.getContext('2d').putImageData(imgdata,0,0)
     // display(g_hidden_canvas,ctx,mapinfo)
     // console.log(g_arr1)  
