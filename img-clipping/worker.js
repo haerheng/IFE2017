@@ -1,4 +1,6 @@
 onmessage = function(e) {
+    const time_start = performance.now()
+
     var imgdata = e.data[0]//imgdata
     var pos = e.data[1]//pos
     var width = imgdata.width, height = imgdata.height, data = imgdata.data
@@ -13,42 +15,53 @@ onmessage = function(e) {
         newarr = newarr.concat(recursion(newarr[i]))
         if(i/newarr.length - p > 0.1){
             p = i/newarr.length
-            console.log(p)
+            console.log((100 * p).toFixed(1) + '% -> ' + (performance.now() - time_start))
         }
     }
+    /**
+     * change color to white
+     * 应该移除！
+     */
+    console.log('开始替换-> ' + (performance.now() - time_start))
+
     g_arr1.forEach(
         (e,i)=>{
             imgdata.data[i] = 255
             imgdata.data[i+1] = 255
             imgdata.data[i+2] = 255
             imgdata.data[i+4] = 255
-            // console.log(i)
         }
     )
     postMessage(imgdata)
+    console.log('-> ' + (performance.now() - time_start))
     close()
-    // g_hidden_canvas.getContext('2d').putImageData(imgdata,0,0)
-    // display(g_hidden_canvas,ctx,mapinfo)
-    // console.log(g_arr1)  
-    return color
+   
+    /**
+     * point: [pos_x, pos_y]
+     * 
+     * return: [[pos_x, pos_y], [pos_x, pos_y]...]
+     */
     function recursion(point){
-        var new_arr        
+        var point_list        
         var near = _nearby(point[0], point[1])
-        new_arr = []
+        point_list = []
         near.forEach((e,i)=>{
             var D = color_distance(color, _color(e[0],e[1]))
             var index = _(e[0],e[1])
             if(g_arr0[index] || g_arr1[index]){
+                //色差已比较
                 return
             }
             if(D > count){
+                //色差超过范围
                 g_arr0[index] = 1
             }else{
+                //色差符合精度范围
                 g_arr1[index] = 1
-                new_arr.push(e)
+                point_list.push(e)//以此点为基础，继续迭代搜索
             }
         })
-        return new_arr;
+        return point_list
         
 
     }
